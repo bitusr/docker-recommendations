@@ -1,0 +1,35 @@
+# dependencies
+node_modules
+
+# VCS
+.git
+.gitignore
+
+# configs
+.npmrc
+.husky
+.lintstagedrc
+.prettierrc
+.prettierignore
+.eslintignore
+.eslintrc
+*.yml
+
+# logs
+*.log
+
+# environment variables
+.env*
+
+# compiled code
+build
+dist
+
+# docker
+Dockerfile*
+
+# docs
+README.md
+
+# temporary files
+~*

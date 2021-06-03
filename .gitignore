@@ -1,0 +1,33 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors and IDEs
+.idea
+*.sublime*
+.vscode
+
+# Dependencies and logs
+node_modules/
+.npmrc
+*.log*
+
+# Transpiled code
+build/
+dist/
+
+# Local config files
+.env
+.env.dev
+.env.test
+.env.prod
+
+# Temporary files
+~*
+
+# Misc
+.eslintcache
+/.pnp
+.pnp.js
