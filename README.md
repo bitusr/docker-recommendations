@@ -127,7 +127,7 @@ RUN apk add dumb-init
 ENV NODE_ENV production
 ENV NPM_TOKEN 1234
 WORKDIR /usr/src/app
-COPY --chown=node:node .. .
+COPY --chown=node:node . .
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && \
    npm ci --only=production
 USER node
