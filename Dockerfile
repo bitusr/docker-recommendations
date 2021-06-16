@@ -27,15 +27,24 @@ RUN npm install -g npm@^7
 WORKDIR /app
 
 # Copying rarely changed files
-COPY ./package*.json ./tsconfig.json ./
+COPY package*.json tsconfig.json ./
 
 # - Installing dependencies
 #   - "ci" is continuous integration (for deterministic builds)
 #   - "--only=production" installs only prod dependencies
 #   - "--ignore-scripts" to ignore life-cycle scripts e.g.:
-#   - "prepare" script is gonna be ignored because husky not needed in prod
+#       - "prepare" script is gonna be ignored because husky not needed in prod
+RUN npm ci --only=production --ignore-scripts
+
+# - Friends don’t let friends run containers as root! :)
+# - The official node Docker image and variants like alpine, include a
+#   least-privileged user of the same name: "node"
+# - Here we're changing 1. ownership and 2. group from "root" to "node"
+#   - for details see chapter #4 in recommendation link above
+COPY --chown=node:node . .
+
 # - Compiling (create compile command in package.json)
-RUN npm ci --only=production --ignore-scripts && npm run compile
+RUN npm run compile
 
 # SECOND STAGE - OPTIMIZE, PUBLISH, SERVE
 # ==============================================================================
@@ -62,14 +71,10 @@ USER node
 
 WORKDIR /app
 
-# - Friends don’t let friends run containers as root! :)
-# - The official node Docker image and variants like alpine, include a
-#   least-privileged user of the same name: "node"
-# - Here we're changing 1. ownership and 2. group from "root" to "node"
-#   - for details see chapter #4 in recommendation link above
 # - We intentionally copy node_modules and dist from the build stage
 #   - node_modules/ - dependcies
 #   - dist/ - compiled code
+#   - we're still NOT forgetting to change an ownership and group
 COPY --chown=node:node --from=build /app/node_modules /app/node_modules
 COPY --chown=node:node --from=build /app/dist /app/dist
 COPY --chown=node:node . .
